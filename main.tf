@@ -15,17 +15,22 @@ provider "aws" {
 }
 
 
-# Generate a random suffix
+# Random suffix for uniqueness
 resource "random_id" "suffix" {
   byte_length = 4
 }
 
-# Create the S3 bucket
+# Logging bucket (used to store access logs)
+resource "aws_s3_bucket" "log_bucket" {
+  bucket = "my-tf-example-logs-${random_id.suffix.hex}"
+  acl    = "log-delivery-write"
+}
+
+# Main bucket
 resource "aws_s3_bucket" "example" {
   bucket = "my-tf-example-bucket-${random_id.suffix.hex}"
   acl    = "private"
 
-  # Optional: enable logging to satisfy tfsec
   logging {
     target_bucket = aws_s3_bucket.log_bucket.id
     target_prefix = "logs/"
