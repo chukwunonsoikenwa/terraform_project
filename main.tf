@@ -5,11 +5,7 @@ terraform {
       version = "~> 6.0"
     }
   }
-
-
 }
-
-
 provider "aws" {
   region = var.aws
   access_key = var.aws2
