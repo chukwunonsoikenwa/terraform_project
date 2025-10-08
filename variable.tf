@@ -4,7 +4,7 @@ variable "aws" {
       sensitive   = true
     
     }
- 
+    
     variable "aws2" {
       description = "Access key"
       type        = string
