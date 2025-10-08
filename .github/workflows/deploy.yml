@@ -14,7 +14,6 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      env:
       TF_VAR_aws: ${{ secrets.AWS_REGION }} # or from secrets if needed
       TF_VAR_aws2: ${{ secrets.AWS_ACCESS_KEY_ID }}
       TF_VAR_aws3: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
