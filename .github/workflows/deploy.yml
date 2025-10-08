@@ -15,11 +15,11 @@ jobs:
 
     env:
       env:
-      TF_VAR_aws: us-east-1  # or from secrets if needed
+      TF_VAR_aws: ${{ secrets.AWS_REGION }} # or from secrets if needed
       TF_VAR_aws2: ${{ secrets.AWS_ACCESS_KEY_ID }}
       TF_VAR_aws3: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       TF_VERSION: ${{ secrets.TF_VERSION }}
-      TFLINT_VERSION: '0.53.0' # Updated to a more recent version
+      TFLINT_VERSION: '0.58.0' # Updated to a more recent version
       TFSEC_VERSION: '1.28.1'   # Updated to a more recent version
 
     steps:
@@ -29,9 +29,9 @@ jobs:
     - name: 'Configure AWS credentials'
       uses: aws-actions/configure-aws-credentials@v1
       with:
-        aws-access-key-id: ${{ secrets.aws_access_key }}
-        aws-secret-access-key: ${{ secrets.aws_secret_ke }}
-        aws-region: ${{ secrets.aws_region }}
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ secrets.AWS_REGION }}
 
     - name: 'Set up Terraform'
       uses: hashicorp/setup-terraform@v1
@@ -40,7 +40,7 @@ jobs:
  #
     - name: 'Install TFLint'
       run: |
-        curl -sLo tflint.zip https://github.com/terraform-linters/tflint/releases/download/v${{ secrets.TFLINT_VERSION }}/tflint_linux_amd64.zip
+        curl -sLo tflint.zip https://github.com/terraform-linters/tflint/releases/download/v${{ env.TFLINT_VERSION }}/tflint_linux_amd64.zip
         unzip tflint.zip -d /usr/local/bin/
         tflint --version
 
