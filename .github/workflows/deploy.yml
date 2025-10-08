@@ -18,7 +18,7 @@ jobs:
       TF_VAR_aws2: ${{ secrets.AWS_ACCESS_KEY_ID }}
       TF_VAR_aws3: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       TF_VERSION: ${{ secrets.TF_VERSION }}
-      TFLINT_VERSION: '0.58.0' # Updated to a more recent version
+      TFLINT_VERSION: '0.33.0' # Updated to a more recent version
       TFSEC_VERSION: '1.28.14'   # Updated to a more recent version
 
     steps:
