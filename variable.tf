@@ -22,3 +22,4 @@ variable "aws" {
       type        = string
       default     = "1.5.7"
     }
+    
