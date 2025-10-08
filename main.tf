@@ -16,8 +16,14 @@ provider "aws" {
 
 
 #tfsec:ignore:aws-s3-enable-bucket-logging
+
 resource "aws_s3_bucket" "example" {
-  bucket = "my-tf-example-bucket-999"
+  bucket = "my-tf-example-bucket-${random_id.suffix.hex}"
+  acl = "private"
+}
+
+resource "random_id" "suffix" {
+  byte_length = 4
 }
 
 resource "aws_s3_bucket_ownership_controls" "example" {
@@ -26,6 +32,7 @@ resource "aws_s3_bucket_ownership_controls" "example" {
     object_ownership = "BucketOwnerPreferred"
   }
 }
+
 
 resource "aws_s3_bucket_acl" "example" {
   depends_on = [aws_s3_bucket_ownership_controls.example]
