@@ -8,28 +8,25 @@ terraform {
     }
   }
 }
+
 provider "aws" {
-  region = var.aws
+  region     = var.aws
   access_key = var.aws2
   secret_key = var.aws3
 }
 
-
-# Random suffix for uniqueness
 resource "random_id" "suffix" {
   byte_length = 4
 }
 
-# Logging bucket (used to store access logs)
+# Logging bucket (no ACL)
 resource "aws_s3_bucket" "log_bucket" {
   bucket = "my-tf-example-logs-${random_id.suffix.hex}"
-  acl    = "log-delivery-write"
 }
 
-# Main bucket
+# Main bucket with logging
 resource "aws_s3_bucket" "example" {
   bucket = "my-tf-example-bucket-${random_id.suffix.hex}"
-  
 
   logging {
     target_bucket = aws_s3_bucket.log_bucket.id
@@ -37,6 +34,7 @@ resource "aws_s3_bucket" "example" {
   }
 }
 
+# Enforce bucket ownership
 resource "aws_s3_bucket_ownership_controls" "example" {
   bucket = aws_s3_bucket.example.id
   rule {
@@ -44,13 +42,7 @@ resource "aws_s3_bucket_ownership_controls" "example" {
   }
 }
 
-resource "aws_s3_bucket_acl" "example" {
-  depends_on = [aws_s3_bucket_ownership_controls.example]
-
-  bucket = aws_s3_bucket.example.id
-  
-}
-
+# Block public access
 resource "aws_s3_bucket_public_access_block" "example" {
   bucket = aws_s3_bucket.example.id
 
@@ -60,19 +52,22 @@ resource "aws_s3_bucket_public_access_block" "example" {
   restrict_public_buckets = true
 }
 
-resource "aws_s3_bucket_versioning" "versioning_example" {
+# Enable versioning
+resource "aws_s3_bucket_versioning" "example" {
   bucket = aws_s3_bucket.example.id
   versioning_configuration {
     status = "Enabled"
   }
 }
 
+# KMS key for encryption
 resource "aws_kms_key" "mykey" {
   description             = "This key is used to encrypt bucket objects"
   enable_key_rotation     = true
   deletion_window_in_days = 7
 }
 
+# Server-side encryption
 resource "aws_s3_bucket_server_side_encryption_configuration" "example" {
   bucket = aws_s3_bucket.example.id
 
