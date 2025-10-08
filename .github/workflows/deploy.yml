@@ -50,6 +50,9 @@ jobs:
         mv tfsec /usr/local/bin/
         tfsec --version
 
+    - name: 'tfsec'
+      run: tfsec . --exclude aws-s3-enable-bucket-logging
+
     - name: 'Terraform Init'
       run: terraform init
 
