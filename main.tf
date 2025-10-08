@@ -15,9 +15,21 @@ provider "aws" {
 }
 
 
-#tfsec:ignore:aws-s3-enable-bucket-logging
+# Generate a random suffix
+resource "random_id" "suffix" {
+  byte_length = 4
+}
+
+# Create the S3 bucket
 resource "aws_s3_bucket" "example" {
-  bucket = "my-tf-example-bucket-999"
+  bucket = "my-tf-example-bucket-${random_id.suffix.hex}"
+  acl    = "private"
+
+  # Optional: enable logging to satisfy tfsec
+  logging {
+    target_bucket = aws_s3_bucket.log_bucket.id
+    target_prefix = "logs/"
+  }
 }
 
 resource "aws_s3_bucket_ownership_controls" "example" {
