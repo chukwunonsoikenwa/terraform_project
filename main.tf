@@ -8,9 +8,6 @@ terraform {
 
 
 }
-terraform {
-  required_version = var.TF_VERSION
-}
 
 
 provider "aws" {
