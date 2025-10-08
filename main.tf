@@ -16,31 +16,9 @@ provider "aws" {
 
 
 #tfsec:ignore:aws-s3-enable-bucket-logging
-
 resource "aws_s3_bucket" "example" {
-  bucket = "my-tf-example-bucket-${random_id.suffix.hex}"
-  acl = "private"
+  bucket = "my-tf-example-bucket-999"
 }
-
-resource "random_id" "suffix" {
-  byte_length = 4
-}
-resource "aws_s3_bucket" "example" {
-  bucket = "my-tf-example-bucket-${random_id.suffix.hex}"
-  acl    = "private"
-
-  logging {
-    target_bucket = aws_s3_bucket.log_bucket.id
-    target_prefix = "logs/"
-  }
-}
-
-# Dedicated bucket for logs
-resource "aws_s3_bucket" "log_bucket" {
-  bucket = "my-tf-example-bucket-logs-${random_id.suffix.hex}"
-  acl    = "log-delivery-write"
-}
-
 
 resource "aws_s3_bucket_ownership_controls" "example" {
   bucket = aws_s3_bucket.example.id
@@ -48,7 +26,6 @@ resource "aws_s3_bucket_ownership_controls" "example" {
     object_ownership = "BucketOwnerPreferred"
   }
 }
-
 
 resource "aws_s3_bucket_acl" "example" {
   depends_on = [aws_s3_bucket_ownership_controls.example]
