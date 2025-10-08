@@ -23,13 +23,13 @@ resource "random_id" "suffix" {
 # Logging bucket (used to store access logs)
 resource "aws_s3_bucket" "log_bucket" {
   bucket = "my-tf-example-logs-${random_id.suffix.hex}"
-  acl    = "log-delivery-write"
+ 
 }
 
 # Main bucket
 resource "aws_s3_bucket" "example" {
   bucket = "my-tf-example-bucket-${random_id.suffix.hex}"
-  acl    = "private"
+  
 
   logging {
     target_bucket = aws_s3_bucket.log_bucket.id
@@ -48,7 +48,7 @@ resource "aws_s3_bucket_acl" "example" {
   depends_on = [aws_s3_bucket_ownership_controls.example]
 
   bucket = aws_s3_bucket.example.id
-  acl    = "private"
+  
 }
 
 resource "aws_s3_bucket_public_access_block" "example" {
